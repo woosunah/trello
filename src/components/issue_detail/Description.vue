@@ -27,7 +27,6 @@ export default {
   h4 {
     margin: 0 10px;
     display: inline-block;
-    margin-bottom: 15px;
   }
   p {
     font-size: 14px;

@@ -21,6 +21,7 @@ export default {
   name: 'DueDate',
   data() {
     return {
+      menu: false,
       date: new Date().toISOString().substr(0, 10),
       // expected output: 2011-10-05 / (0index부터~10번째자리까지만 출력 나머진 삭제)T14:48:00.000Z
     };

@@ -12,8 +12,11 @@
           <due-date></due-date>
           <description></description>
           <check-list></check-list>
+          <activity></activity>
         </v-col>
-        <v-col cols="4"></v-col>
+        <v-col cols="4">
+          <actions></actions>
+        </v-col>
       </v-row>
     </v-card>
   </v-overlay>
@@ -26,15 +29,19 @@ export default {
     DueDate: () => import('@/components/issue_detail/DueDate.vue'),
     Description: () => import('@/components/issue_detail/Description.vue'),
     CheckList: () => import('@/components/issue_detail/CheckList.vue'),
+    Activity: () => import('@/components/issue_detail/Activity.vue'),
+    Actions: () => import('@/components/issue_detail/Actions.vue'),
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .issue-detail-card {
-  width: 80vw;
-  // 창의크기 80%
+  width: 800px;
+  // vw 창의크기 60%
   min-height: 80vh;
+  padding: 20px;
+  background: #f4f5f7;
 }
 
 .issue-detail-header {
