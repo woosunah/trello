@@ -1,16 +1,26 @@
 <template>
   <div>
     <div class="main-view">
-      <list-box :title="'to do'" class="list-box"></list-box>
+      <!-- :title="'to do'" -->
+      <list-box
+        :list="list"
+        class="list-box"
+        v-for="(list, i) in lists"
+        :key="i"
+      ></list-box>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: 'Main',
   components: {
     ListBox: () => import('@/components/main/ListBox.vue'),
+  },
+  computed: {
+    ...mapState(['lists']),
   },
 };
 </script>

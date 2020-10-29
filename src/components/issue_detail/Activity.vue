@@ -41,32 +41,33 @@
 <script>
 import moment from 'moment';
 export default {
+  props: ['activities'],
   name: 'Activity',
   data() {
     return {
       profileImg:
         'https://contents.sixshop.com/thumbnails/uploadedFiles/79226/product/image_1569804185381_750.jpg',
-      activities: [
-        {
-          id: 0,
-          imgSrc:
-            'https://contents.sixshop.com/thumbnails/uploadedFiles/79226/product/image_1569804185381_750.jpg',
-          name: 'nickname',
-          text: 'hi my name is nick',
-          createdAt: '2020-10-27T08:09:34.345Z',
-        },
-        {
-          id: 0,
-          imgSrc:
-            'https://contents.sixshop.com/thumbnails/uploadedFiles/79226/product/image_1569804185381_750.jpg',
-          name: 'nickname',
-          text: 'hi my name is nick',
-          createdAt: '2020-10-27T08:09:34.345Z',
-          // console창에 new Date 이렇게 치면 나옴
-          // new Date().toISOString()
-          //->output "2020-10-28T07:34:55.812Z+9:00 / Z+9:00 한국시간 +9:00(이부분이 로컬시간)"
-        },
-      ],
+      // activities: [
+      //   {
+      //     id: 0,
+      //     imgSrc:
+      //       'https://contents.sixshop.com/thumbnails/uploadedFiles/79226/product/image_1569804185381_750.jpg',
+      //     name: 'nickname',
+      //     text: 'hi my name is nick',
+      //     createdAt: '2020-10-27T08:09:34.345Z',
+      //   },
+      //   {
+      //     id: 0,
+      //     imgSrc:
+      //       'https://contents.sixshop.com/thumbnails/uploadedFiles/79226/product/image_1569804185381_750.jpg',
+      //     name: 'nickname',
+      //     text: 'hi my name is nick',
+      //     createdAt: '2020-10-27T08:09:34.345Z',
+      //     // console창에 new Date 이렇게 치면 나옴
+      //     // new Date().toISOString()
+      //     //->output "2020-10-28T07:34:55.812Z+9:00 / Z+9:00 한국시간 +9:00(이부분이 로컬시간)"
+      //   },
+      // ],
     };
   },
   methods: {

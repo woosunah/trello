@@ -2,13 +2,19 @@
   <v-card class="list-box">
     <v-row class="box-header" align="center" no-gutters>
       <!-- align-items의 align -->
-      <h2>{{ title }}</h2>
+      <h2>{{ list.title }}</h2>
+      <!-- index.js에서 list의 title을 받아오니까  그전에는 title을 직접받아와서 title만작성-->
+
       <v-spacer></v-spacer>
       <v-btn icon> <v-icon>mdi-dots-horizontal</v-icon></v-btn>
     </v-row>
 
     <div class="item-list-wrapper">
-      <issue-card :title="'this is title'"></issue-card>
+      <issue-card
+        v-for="(issue, i) in relatedIssues"
+        :key="i"
+        :issue="issue"
+      ></issue-card>
       <!-- 따로 파일만들어서 import시켜준 부분 태그명으로 남겨서 연결해주기 -->
     </div>
     <div class="btn-wrapper">
@@ -18,11 +24,20 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: 'ListBox',
-  props: ['title'],
+  props: ['list'],
   components: {
     IssueCard: () => import('@/components/main/IssueCard.vue'),
+  },
+  computed: {
+    ...mapState(['issues']),
+    // 실시간으로 계산? computed?
+    relatedIssues() {
+      return this.issues.filter((el) => el.listId === this.list.id);
+      // el은 => index.js - issues id/listId
+    },
   },
 };
 </script>

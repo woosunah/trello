@@ -35,12 +35,13 @@
 <script>
 export default {
   name: 'CheckList',
+  props: ['tasks'],
   data() {
     return {
-      tasks: [
-        { title: 'task1', complete: false },
-        { title: 'task2', complete: false },
-      ],
+      // tasks: [
+      //   { title: 'task1', complete: false },
+      //   { title: 'task2', complete: false },
+      // ], props로 tasks를 받아오니까 지워줘도됨
     };
   },
   computed: {

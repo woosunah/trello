@@ -6,17 +6,14 @@
       <v-btn small elevation="0">Edit</v-btn>
     </v-row>
     <div></div>
-    <p>
-      2.1.8 버전 복사<br />
-      2.1.8.1과 다름 <br />
-      실 선택 삭제
-    </p>
+    <p>{{ descr }}</p>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Description',
+  props: ['descr'],
 };
 </script>
 

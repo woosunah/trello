@@ -11,7 +11,7 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn v-bind="attrs" v-on="on">{{ date }} </v-btn>
       </template>
-      <v-date-picker v-model="date" @input="menu = false"> </v-date-picker>
+      <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
     </v-menu>
   </div>
 </template>
@@ -19,11 +19,12 @@
 <script>
 export default {
   name: 'DueDate',
+  props: ['date'],
   data() {
     return {
       menu: false,
-      date: new Date().toISOString().substr(0, 10),
-      // expected output: 2011-10-05 / (0index부터~10번째자리까지만 출력 나머진 삭제)T14:48:00.000Z
+      // date: new Date().toISOString().substr(0, 10),
+      // // expected output: 2011-10-05 / (0index부터~10번째자리까지만 출력 나머진 삭제)T14:48:00.000Z
     };
   },
 };

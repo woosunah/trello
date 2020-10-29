@@ -1,28 +1,33 @@
 <template>
-  <v-overlay :value="true">
-    <v-card class="issue-detail-card" light>
-      <div class="issue-detail-header">
-        <v-icon>mdi-id-card</v-icon>
-        <h2>v2.1.8.2</h2>
-        <p>in list <u>todo</u></p>
-        <v-btn icon class="close-btn"><v-icon>mdi-close</v-icon></v-btn>
-      </div>
-      <v-row>
-        <v-col cols="8" class="left-side">
-          <due-date></due-date>
-          <description></description>
-          <check-list></check-list>
-          <activity></activity>
-        </v-col>
-        <v-col cols="4">
-          <actions></actions>
-        </v-col>
-      </v-row>
-    </v-card>
+  <v-overlay :value="isDetailShow">
+    <div class="scroll-view">
+      <v-card class="issue-detail-card" light>
+        <div class="issue-detail-header">
+          <v-icon>mdi-id-card</v-icon>
+          <h2>{{ currentIssue.title }}</h2>
+          <p>in list {{ 'todo' }}</p>
+          <v-btn icon class="close-btn" @click="closeDetail"
+            ><v-icon>mdi-close</v-icon></v-btn
+          >
+        </div>
+        <v-row>
+          <v-col cols="8" class="left-side">
+            <due-date :date="currentIssue.dueDate"></due-date>
+            <description :descr="currentIssue.description"></description>
+            <check-list :tasks="currentIssue.Checklist"></check-list>
+            <activity :activities="currentIssue.activities"></activity>
+          </v-col>
+          <v-col cols="4">
+            <actions></actions>
+          </v-col>
+        </v-row>
+      </v-card>
+    </div>
   </v-overlay>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
   name: 'IssueDetail',
   components: {
@@ -32,18 +37,32 @@ export default {
     Activity: () => import('@/components/issue_detail/Activity.vue'),
     Actions: () => import('@/components/issue_detail/Actions.vue'),
   },
+  computed: {
+    ...mapState(['isDetailShow', 'currentIssue']),
+    // "..." - 객체안에 선언할때, 객체의 내부데이터만 빼서 선언할 새로운 객체에 전달
+    // mapState만 올 경우 객체 안에 객체로 전달됨
+  },
+  methods: {
+    closeDetail() {
+      this.$store.commit('toggleIsDetailShow');
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 .issue-detail-card {
-  width: 800px;
+  max-width: 800px;
   // vw 창의크기 60%
+  width: 100vw;
   min-height: 80vh;
   padding: 20px;
   background: #f4f5f7;
 }
-
+.scroll-view {
+  overflow-y: auto;
+  max-height: 80vh;
+}
 .issue-detail-header {
   padding: 20px;
   position: relative;
@@ -58,8 +77,8 @@ export default {
   }
   .close-btn {
     position: absolute;
-    top: 20px;
-    right: 10px;
+    top: 0px;
+    right: 0px;
   }
 }
 </style>
