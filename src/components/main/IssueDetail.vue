@@ -12,9 +12,16 @@
         </div>
         <v-row>
           <v-col cols="8" class="left-side">
-            <due-date :date="currentIssue.dueDate"></due-date>
-            <description :descr="currentIssue.description"></description>
-            <check-list :tasks="currentIssue.Checklist"></check-list>
+            <due-date
+              :init-date="currentIssue.dueDate"
+              @change-date="changeDate"
+            ></due-date>
+            <!-- @change-date(이벤트이름) 전부 소문자로 부모에게 먼저 이름 붙여주기-->
+            <description
+              :init-descr="currentIssue.description"
+              @change-descr="changeDescr"
+            ></description>
+            <check-list :tasks="currentIssue.checklist"></check-list>
             <activity :activities="currentIssue.activities"></activity>
           </v-col>
           <v-col cols="4">
@@ -27,6 +34,7 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import { mapState } from 'vuex';
 export default {
   name: 'IssueDetail',
@@ -45,6 +53,23 @@ export default {
   methods: {
     closeDetail() {
       this.$store.commit('toggleIsDetailShow');
+    },
+    changeDate(date) {
+      console.log('change date:', date);
+      this.$store.commit('fixDate', {
+        id: this.currentIssue.id,
+        dueDate: date,
+      });
+    },
+    changeDescr(text) {
+      // this.$store.commit('fixDescr', {
+      //   id: this.currentIssue.id,
+      //   descr: text,
+      // });
+      let clone = _.cloneDeep(this.currentIssue);
+      clone.Description = text;
+      // clone안하면 원래 파일을 손상시킴?
+      this.$store.commit('editIssue', clone);
     },
   },
 };
