@@ -27,7 +27,26 @@
       ></v-checkbox>
     </div>
     <div class="button-wrapper">
-      <v-btn small elevation="0" style="margin-left:35px">Add an item</v-btn>
+      <v-btn
+        v-if="!isEdit"
+        small
+        elevation="0"
+        style="margin-left:35px"
+        @click="isEdit = true"
+        >Add an item</v-btn
+      >
+      <div v-else>
+        <v-textarea
+          v-model="newItem"
+          solo
+          outlined
+          flat
+          placeholder="Add an item"
+        >
+        </v-textarea>
+        <v-btn color="green" dark @click="save">Add</v-btn>
+        <v-btn icon @click="isEdit = false"><v-icon>mdi-close</v-icon></v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -38,16 +57,36 @@ export default {
   props: ['tasks'],
   data() {
     return {
+      isEdit: false,
+      newItem: '',
       // tasks: [
       //   { title: 'task1', complete: false },
       //   { title: 'task2', complete: false },
       // ], props로 tasks를 받아오니까 지워줘도됨
     };
   },
+  methods: {
+    save() {
+      this.$emit('add-check-item', {
+        id: this.newCheckItemId,
+        title: this.newItem,
+        complete: false,
+      });
+      this.newItem = '';
+    },
+  },
   computed: {
     progress() {
       let completeNum = this.tasks.filter((el) => el.complete).length;
       return (completeNum / this.tasks.length) * 100;
+    },
+    newCheckItemId() {
+      return (
+        this.tasks.reduce((acc, cur) => {
+          acc = Math.max(acc, cur.id);
+          return acc;
+        }, 0) + 1
+      );
     },
   },
 };

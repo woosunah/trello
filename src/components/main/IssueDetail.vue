@@ -21,8 +21,14 @@
               :init-descr="currentIssue.description"
               @change-descr="changeDescr"
             ></description>
-            <check-list :tasks="currentIssue.checklist"></check-list>
-            <activity :activities="currentIssue.activities"></activity>
+            <check-list
+              :tasks="currentIssue.checklist"
+              @add-check-item="addCheckListItem"
+            ></check-list>
+            <activity
+              :activities="currentIssue.activities"
+              @add-comment="addComment"
+            ></activity>
           </v-col>
           <v-col cols="4">
             <actions></actions>
@@ -51,6 +57,11 @@ export default {
     // mapState만 올 경우 객체 안에 객체로 전달됨
   },
   methods: {
+    addCheckListItem(item) {
+      let clone = _.cloneDeep(this.currentIssue);
+      clone.checklist.push(item);
+      this.$store.commit('editIssue', clone);
+    },
     closeDetail() {
       this.$store.commit('toggleIsDetailShow');
     },
@@ -67,8 +78,14 @@ export default {
       //   descr: text,
       // });
       let clone = _.cloneDeep(this.currentIssue);
-      clone.Description = text;
+      clone.description = text;
       // clone안하면 원래 파일을 손상시킴?
+      this.$store.commit('editIssue', clone);
+      // commit - 파일 및 폴더의 추가/변경 사항 저장소에 기록?
+    },
+    addComment(comment) {
+      let clone = _.cloneDeep(this.currentIssue);
+      clone.activities.push(comment);
       this.$store.commit('editIssue', clone);
     },
   },
@@ -78,8 +95,8 @@ export default {
 <style lang="scss" scoped>
 .issue-detail-card {
   max-width: 800px;
-  // vw 창의크기 60%
   width: 100vw;
+  // vw 창의크기 100%
   min-height: 80vh;
   padding: 20px;
   background: #f4f5f7;

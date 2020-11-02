@@ -93,15 +93,15 @@ export default new Vuex.Store({
     // index.js안에서만 mutations 작성 (state안에 내용추가해줄때 사용)
     // mutation에서 사용된 함수들은 각 파일에서 methods로 사용
     fixDate(state, payload) {
-      let target = state.issue.find((el) => el.id === payload.id);
+      let target = state.issues.find((el) => el.id === payload.id);
       target.dueDate = payload.dueDate;
     },
     fixDescr(state, payload) {
-      let target = state.issue.find((el) => el.id === payload.id);
+      let target = state.issues.find((el) => el.id === payload.id);
       target.description = payload.descr;
     },
     editIssue(state, payload) {
-      let target = state.issue.find((el) => el.id === payload.id);
+      let target = state.issues.find((el) => el.id === payload.id);
       Object.assign(target, payload);
     },
   },

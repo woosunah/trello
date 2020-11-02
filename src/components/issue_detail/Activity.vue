@@ -8,15 +8,20 @@
       <v-avatar size="50"> <v-img :src="profileImg"/></v-avatar>
 
       <v-text-field
-        label="Write a comment ..."
-        single-line
+        flat
+        placeholder="Write a comment ..."
         outlined
-        class="menu"
+        v-model="newComment"
+        class="comment-text-field"
+        @keyup.enter="save"
       >
+        <template v-slot:append
+          ><v-btn text small color="green" @click="save">SAVE</v-btn>
+        </template>
       </v-text-field>
     </v-row>
     <div class="activity-list-wrapper">
-      <v-row no-gutters v-for="(comment, i) in activities" :key="i">
+      <v-row no-gutters v-for="(comment, i) in orderedActivites" :key="i">
         <div class="profile-wrapper">
           <v-avatar><v-img :src="comment.imgSrc"></v-img></v-avatar>
         </div>
@@ -39,12 +44,14 @@
 </template>
 
 <script>
+import _ from 'lodash';
 import moment from 'moment';
 export default {
   props: ['activities'],
   name: 'Activity',
   data() {
     return {
+      newComment: '',
       profileImg:
         'https://contents.sixshop.com/thumbnails/uploadedFiles/79226/product/image_1569804185381_750.jpg',
       // activities: [
@@ -70,15 +77,38 @@ export default {
       // ],
     };
   },
+  computed: {
+    newCommentId() {
+      return (
+        this.activities.reduce((acc, cur) => {
+          acc = Math.max(acc, cur.id);
+          return acc;
+        }, 0) + 1
+      );
+    },
+    orderedActivites() {
+      let clone = _.cloneDeep(this.activities);
+      return clone.sort(
+        (a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix()
+      );
+    },
+  },
   methods: {
     formatDate(date) {
       let created = moment(date);
-      console.log(
-        moment()
-          .utc()
-          .format()
-      );
-      return created.format('MMMM Do ddd');
+      return created.format('MMMM Do ddd [at] HH:mm a');
+      // [문자로 인식] a - am pm
+    },
+    save() {
+      this.$emit('add-comment', {
+        id: this.newCommentId,
+        imgSrc: this.profileImg,
+        name: 'me',
+        text: this.newComment,
+        createdAt: moment().toISOString(),
+      });
+      this.newComment = '';
+      // write a comment에 작성 후 sava하면 다시 빈칸으로 돌리기
     },
   },
 };
