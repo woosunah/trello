@@ -21,6 +21,7 @@
               :init-descr="currentIssue.description"
               @change-descr="changeDescr"
             ></description>
+            <!-- @chage-descr은 자체 이벤트 생성한 것을 연결해줌 / 자식 -> 부모 컴포넌트로 넘길때 $emit 이벤트 발생을 직접 만든걸 뜻함 -->
             <check-list
               :tasks="currentIssue.checklist"
               @add-check-item="addCheckListItem"
@@ -28,10 +29,17 @@
             <activity
               :activities="currentIssue.activities"
               @add-comment="addComment"
+              @edit-comment="editComment"
+              @delete-comment="deleteComment"
             ></activity>
           </v-col>
           <v-col cols="4">
-            <actions></actions>
+            <actions
+              :activities="currentIssue.activities"
+              @move="moveToList"
+              @copy="copyToList"
+              @delete-issue="deleteIssue"
+            ></actions>
           </v-col>
         </v-row>
       </v-card>
@@ -52,9 +60,17 @@ export default {
     Actions: () => import('@/components/issue_detail/Actions.vue'),
   },
   computed: {
-    ...mapState(['isDetailShow', 'currentIssue']),
+    ...mapState(['isDetailShow', 'currentIssue', 'issues']),
     // "..." - 객체안에 선언할때, 객체의 내부데이터만 빼서 선언할 새로운 객체에 전달
     // mapState만 올 경우 객체 안에 객체로 전달됨
+    newIssueId() {
+      return (
+        this.issues.reduce((acc, cur) => {
+          acc = Math.max(acc, cur.id);
+          return acc;
+        }, 0) + 1
+      );
+    },
   },
   methods: {
     addCheckListItem(item) {
@@ -87,6 +103,33 @@ export default {
       let clone = _.cloneDeep(this.currentIssue);
       clone.activities.push(comment);
       this.$store.commit('editIssue', clone);
+    },
+    editComment(comment) {
+      let clone = _.cloneDeep(this.currentIssue);
+      let target = clone.activities.find((el) => el.id === comment.id);
+      target.text = comment.text;
+      this.$store.commit('editIssue', clone);
+    },
+    deleteComment(id) {
+      let clone = _.cloneDeep(this.currentIssue);
+      let targetIndex = clone.activities.findIndex((el) => el.id === id);
+      clone.activities.splice(targetIndex, 1);
+      this.$store.commit('editIssue', clone);
+    },
+    moveToList(item) {
+      let clone = _.cloneDeep(this.currentIssue);
+      clone.listId = item.id;
+      this.$store.commit('editIssue', clone);
+    },
+    copyToList(item) {
+      let clone = _.cloneDeep(this.currentIssue);
+      clone.id = this.newIssueId;
+      clone.listId = item.id;
+      this.$store.commit('addIssue', clone);
+    },
+    deleteIssue() {
+      this.$store.commit('deleteIssue', this.currentIssue.id);
+      // 자기자신을 삭제하니까 자기자신의 id를 넘김
     },
   },
 };

@@ -22,6 +22,7 @@
     </v-row>
     <div class="activity-list-wrapper">
       <v-row no-gutters v-for="(comment, i) in orderedActivites" :key="i">
+        <!-- store - index.js파일 중  activities안에 있는 id를 뜻함  activities ->orderedActivites이름 바꿔준것  -->
         <div class="profile-wrapper">
           <v-avatar><v-img :src="comment.imgSrc"></v-img></v-avatar>
         </div>
@@ -31,11 +32,26 @@
             <span class="date-text">{{ formatDate(comment.createdAt) }}</span>
           </p>
           <v-card class="text-card">
-            <p>{{ comment.text }}</p>
+            <p v-if="!(isEdit === i)">{{ comment.text }}</p>
+            <div v-else>
+              <v-textarea
+                v-model="editedComment"
+                solo
+                flat
+                auto-grow
+                rows="2"
+                row-height="15"
+              >
+              </v-textarea>
+              <v-btn color="green" dark @click="edit(comment.id)">save</v-btn>
+              <v-btn icon @click="isEdit = undefined"
+                ><v-icon>mdi-close</v-icon></v-btn
+              >
+            </div>
           </v-card>
           <div class="activity-actions">
-            <button>Edit</button>
-            <button>Delete</button>
+            <button @click="toEdit(comment.text, i)">Edit</button>
+            <button @click="deleteComment(comment.id)">Delete</button>
           </div>
         </div>
       </v-row>
@@ -75,6 +91,8 @@ export default {
       //     //->output "2020-10-28T07:34:55.812Z+9:00 / Z+9:00 한국시간 +9:00(이부분이 로컬시간)"
       //   },
       // ],
+      isEdit: true,
+      editedComment: '',
     };
   },
   computed: {
@@ -87,9 +105,11 @@ export default {
       );
     },
     orderedActivites() {
+      // 깊은 복제 방법 - lodash 오픈소스 사용해야함
       let clone = _.cloneDeep(this.activities);
       return clone.sort(
         (a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix()
+        // sort-숫자정렬(오름or내림) 최신순으로 업데이트 되기 위해 내림차순 숫자 정렬법
       );
     },
   },
@@ -108,7 +128,21 @@ export default {
         createdAt: moment().toISOString(),
       });
       this.newComment = '';
-      // write a comment에 작성 후 sava하면 다시 빈칸으로 돌리기
+      // write a comment에 작성 후 save하면 다시 빈칸으로 돌리기
+    },
+    toEdit(comment, index) {
+      this.isEdit = index;
+      this.editedComment = comment;
+    },
+    edit(id) {
+      console.log('edit');
+      this.$emit('edit-comment', { text: this.editedComment, id: id });
+      // 자식컴포넌트 -> 부모컴포넌트 이벤트 발생시켜 전달($emit)
+      // 'edit-comment 데이터를 주고자 하는 컴포넌트
+      this.isEdit = undefined;
+    },
+    deleteComment(id) {
+      this.$emit('delete-comment', id);
     },
   },
 };
