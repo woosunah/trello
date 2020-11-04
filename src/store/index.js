@@ -93,6 +93,9 @@ export default new Vuex.Store({
       state.issues.splice(targetIndex, 1);
       state.isDetailShow = false;
     },
+    addList(state, payload) {
+      state.lists.push(payload);
+    },
   },
   actions: {},
   modules: {},

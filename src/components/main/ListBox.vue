@@ -62,6 +62,14 @@ export default {
       return this.issues.filter((el) => el.listId === this.list.id);
       // el은 => index.js - issues id/listId
     },
+    newIssueId() {
+      return (
+        this.issues.reduce((acc, cur) => {
+          acc = Math.max(acc, cur.id);
+          return acc;
+        }, 0) + 1
+      );
+    },
   },
   methods: {
     addCard() {
